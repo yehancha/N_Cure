@@ -7,10 +7,37 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.yehancha.jay.ncure.LoginActivity">
+    tools:context="com.yehancha.jay.ncure.LoginActivity"
+    android:background="#3F51B5">
 
-    <TextView
+    <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/n_cure"
+                android:layout_margin="16dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/et_user_id"
+                android:layout_margin="16dp"
+                android:background="@android:color/white"
+                android:textSize="40sp"
+                android:maxLength="4"
+                android:hint="@string/hint_user_id"
+                android:textAlignment="center"/>
+        </LinearLayout>
+    </ScrollView>
+
 </RelativeLayout>
