@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">N+Cure</string>
     <string name="hint_user_id">User ID</string>
+    <string name="lbl_new_patient">New</string>
+    <string name="lbl_patients">Records</string>
+    <string name="lbl_doctors">Doctors</string>
+    <string name="lbl_language">Language</string>
+    <string name="lbl_user">User:</string>
+    <string name="lbl_last_used">Last used:</string>
+    <string name="lbl_schedule">My Schedule</string>
 </resources>
