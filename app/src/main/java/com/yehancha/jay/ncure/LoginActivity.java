@@ -3,6 +3,7 @@ package com.yehancha.jay.ncure;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +15,18 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity {
     private static final int LENGTH_USER_ID = 4;
@@ -54,12 +65,13 @@ public class LoginActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             Utils.setUserId(LoginActivity.this, userId.toString());
                             startMainActivity();
+                            updateAppointments(userId);
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             progressDialog.dismiss();
-                            if (error.networkResponse != null && error.networkResponse.statusCode == 404) {
+                            if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
                                 showAlertDialog("Wrong user id", "You have entered a wrong user id. Please try again.");
                             } else {
                                 showAlertDialog("Login failed", "Something went wrong when trying to log you in. Please try again.");
@@ -86,5 +98,26 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    private void updateAppointments(String userId) {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, Utils.SERVER_URL + "/appointments.php/" + userId, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                ArrayList<Appointment> appointments = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create().fromJson(response, new TypeToken<ArrayList<Appointment>>(){}.getType());
+
+                SQLiteDatabase db = NCureDbHelper.getInstance(LoginActivity.this).getWritableDatabase();
+                for (Appointment appointment : appointments) {
+                    appointment.insert(db);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        Volley.newRequestQueue(this).add(request);
     }
 }

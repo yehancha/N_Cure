@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -15,9 +17,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ArrayAdapter testAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        testAdapter.addAll(new String[] {"2013-08-22: Visit Clinic A", "2013-09-02: Visit Hospital B for…", "2013-09-06: Training Session at C", "2013-09-11: Visit Clinic A", "2013-09-11: Visit Clinic B"});
+        ArrayList<Appointment> appointments = Appointment.selectAll(NCureDbHelper.getInstance(this).getReadableDatabase());
+        ArrayAdapter<Appointment> appointmentAdapter = new ArrayAdapter<Appointment>(this, android.R.layout.simple_list_item_1);
+        appointmentAdapter.addAll(appointments);
 
-        ((ListView) findViewById(R.id.lv_appointments)).setAdapter(testAdapter);
+        ((ListView) findViewById(R.id.lv_appointments)).setAdapter(appointmentAdapter);
     }
 }
