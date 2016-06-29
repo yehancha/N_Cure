@@ -15,7 +15,7 @@ public class Appointment {
     private static final SimpleDateFormat datetFormat = new SimpleDateFormat("yyyy-MM-dd");
     private transient long _id;
     private int id;
-    private int user_id;
+    private String user_id;
     private Date time;
     private String description;
 
@@ -35,11 +35,11 @@ public class Appointment {
         this.id = id;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return user_id;
     }
 
-    public void setUserId(int user_id) {
+    public void setUserId(String user_id) {
         this.user_id = user_id;
     }
 
@@ -72,7 +72,7 @@ public class Appointment {
         Appointment appointment = new Appointment();
         appointment._id = cursor.getLong(cursor.getColumnIndex(NCureContract.Appointment._ID));
         appointment.id = cursor.getInt(cursor.getColumnIndex(NCureContract.Appointment.COLUMN_NAME_ID));
-        appointment.user_id = cursor.getInt(cursor.getColumnIndex(NCureContract.Appointment.COLUMN_NAME_USER_ID));
+        appointment.user_id = cursor.getString(cursor.getColumnIndex(NCureContract.Appointment.COLUMN_NAME_USER_ID));
         appointment.time = new Date(cursor.getLong(cursor.getColumnIndex(NCureContract.Appointment.COLUMN_NAME_TIME)));
         appointment.description = cursor.getString(cursor.getColumnIndex(NCureContract.Appointment.COLUMN_NAME_DESCRIPTION));
 

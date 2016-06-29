@@ -11,7 +11,7 @@ public class NCureContract {
             "CREATE TABLE " + Appointment.TABLE_NAME + " (" +
                     Appointment._ID + TYPE_INTEGER + " PRIMARY KEY" + COMA_SEP +
                     Appointment.COLUMN_NAME_ID + TYPE_INTEGER  + COMA_SEP +
-                    Appointment.COLUMN_NAME_USER_ID + TYPE_INTEGER + COMA_SEP +
+                    Appointment.COLUMN_NAME_USER_ID + TYPE_TEXT + COMA_SEP +
                     Appointment.COLUMN_NAME_TIME + TYPE_INTEGER + COMA_SEP +
                     Appointment.COLUMN_NAME_DESCRIPTION + TYPE_TEXT +
                     ")";

@@ -8,4 +8,11 @@
     <string name="lbl_user">User:</string>
     <string name="lbl_last_used">Last used:</string>
     <string name="lbl_schedule">My Schedule</string>
+    <string name="lbl_add_appointment">Add Appointment</string>
+    <string name="lbl_date">Date</string>
+    <string name="tlbl_ime">Time</string>
+    <string name="hint_appointment_description">Appointment description</string>
+    <string name="lbl_save">Save</string>
+    <string name="msg_invalid_login_data">Your login data is invalid. Please log back in.</string>
+    <string name="msg_empty_description">Please write a description.</string>
 </resources>
