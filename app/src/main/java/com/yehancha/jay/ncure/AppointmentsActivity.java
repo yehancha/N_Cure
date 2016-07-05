@@ -29,6 +29,7 @@ public class AppointmentsActivity extends AppCompatActivity implements View.OnCl
     private static final String EXTRA_DAY_OF_MONTH = "EXTRA_DAY_OF_MONTH";
     private static final String EXTRA_HOUR_OF_DAY = "EXTRA_HOUR_OF_DAY";
     private static final String EXTRA_MINUTE = "EXTRA_MINUTE";
+    private static final String SAVED_STATE_DATE_TIME = "SAVED_STATE_DATE_TIME";
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
     private static final DateFormat TIME_FORMAT = new SimpleDateFormat("hh:mm a");
@@ -103,6 +104,30 @@ public class AppointmentsActivity extends AppCompatActivity implements View.OnCl
         btnSave.setOnClickListener(this);
         tvDate.setOnClickListener(this);
         tvTime.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle(SAVED_STATE_DATE_TIME, getDateTimeBundle());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Bundle dateTimeBundle = savedInstanceState.getBundle(SAVED_STATE_DATE_TIME);
+        restoreDateTime(dateTimeBundle);
+    }
+
+    private void restoreDateTime(Bundle dateTimeBundle) {
+        calendar.set(
+                dateTimeBundle.getInt(EXTRA_YEAR),
+                dateTimeBundle.getInt(EXTRA_MONTH),
+                dateTimeBundle.getInt(EXTRA_DAY_OF_MONTH),
+                dateTimeBundle.getInt(EXTRA_HOUR_OF_DAY),
+                dateTimeBundle.getInt(EXTRA_MINUTE)
+        );
+        setDateTimeValues();
     }
 
     @Override
