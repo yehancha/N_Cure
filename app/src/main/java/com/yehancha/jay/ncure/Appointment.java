@@ -12,7 +12,10 @@ import java.util.Date;
  * Represents a nurses appointment
  */
 public class Appointment {
+    private static final String SELECTION_ROW_ID = NCureContract.Appointment._ID + "=?";
+
     private static final SimpleDateFormat datetFormat = new SimpleDateFormat("yyyy-MM-dd");
+
     private transient long _id;
     private int id;
     private String user_id;
@@ -59,8 +62,21 @@ public class Appointment {
         this.description = description;
     }
 
+    public static Appointment select(SQLiteDatabase db, long _id) {
+        ArrayList<Appointment> appointments = selectAll(db, SELECTION_ROW_ID, getSelectionArgsForRowId(_id), null);
+        if (appointments.size() > 0) {
+            return appointments.get(0);
+        } else {
+            return null;
+        }
+    }
+
     public static ArrayList<Appointment> selectAll(SQLiteDatabase db) {
-        Cursor cursor = db.query(NCureContract.Appointment.TABLE_NAME, null, null, null, null, null, null);
+        return selectAll(db, null, null, null);
+    }
+
+    public static ArrayList<Appointment> selectAll(SQLiteDatabase db, String selection, String[] selectionArgs, String orderBy) {
+        Cursor cursor = db.query(NCureContract.Appointment.TABLE_NAME, null, selection, selectionArgs, null, null, orderBy);
         ArrayList<Appointment> appointments = new ArrayList<>();
         while (cursor.moveToNext()) {
             appointments.add(fromCursor(cursor));
@@ -79,18 +95,36 @@ public class Appointment {
         return appointment;
     }
 
+    public long save(SQLiteDatabase db) {
+        if (_id == 0l) {
+            return insert(db);
+        } else {
+            boolean updated = update(db);
+            return updated ? 0l : -1l;
+        }
+    }
+
     public long insert(SQLiteDatabase db) {
+        _id = db.insert(NCureContract.Appointment.TABLE_NAME, null, getContentValues());
+        return _id;
+    }
+
+    public boolean update(SQLiteDatabase db) {
+        int numberOfRowsAffected = db.update(NCureContract.Appointment.TABLE_NAME, getContentValues(), SELECTION_ROW_ID, getSelectionArgsForRowId(_id));
+        return numberOfRowsAffected > 0;
+    }
+
+    private ContentValues getContentValues() {
         ContentValues values = new ContentValues();
         values.put(NCureContract.Appointment.COLUMN_NAME_ID, id);
         values.put(NCureContract.Appointment.COLUMN_NAME_USER_ID, user_id);
         values.put(NCureContract.Appointment.COLUMN_NAME_TIME, time.getTime());
         values.put(NCureContract.Appointment.COLUMN_NAME_DESCRIPTION, description);
+        return values;
+    }
 
-        long _id = db.insert(NCureContract.Appointment.TABLE_NAME, null, values);
-
-        this._id = _id;
-
-        return _id;
+    private static String[] getSelectionArgsForRowId(long _id) {
+        return new String[] { String.valueOf(_id) };
     }
 
     @Override

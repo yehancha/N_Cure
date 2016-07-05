@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class AppointmentsActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+    public static final String EXTRA_APPOINTMENT_ID = "EXTRA_APPOINTMENT_ID";
+
     private static final String EXTRA_YEAR = "EXTRA_YEAR";
     private static final String EXTRA_MONTH = "EXTRA_MONTH";
     private static final String EXTRA_DAY_OF_MONTH = "EXTRA_DAY_OF_MONTH";
@@ -29,6 +32,11 @@ public class AppointmentsActivity extends AppCompatActivity implements View.OnCl
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
     private static final DateFormat TIME_FORMAT = new SimpleDateFormat("hh:mm a");
+
+    private boolean newAppointment;
+    private long appointmentId;
+    private Appointment appointment;
+    private SQLiteDatabase db;
 
     private Button btnSave;
     private EditText etDescription;
@@ -41,8 +49,9 @@ public class AppointmentsActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointments);
+        initFields();
         findViews();
-        setDateTimeValues();
+        setViewData();
         setListeners();
     }
 
@@ -51,6 +60,37 @@ public class AppointmentsActivity extends AppCompatActivity implements View.OnCl
         etDescription = (EditText) findViewById(R.id.et_description);
         tvDate = (TextView) findViewById(R.id.tv_date);
         tvTime = (TextView) findViewById(R.id.tv_time);
+    }
+
+    private void initFields() {
+        appointmentId = getExtraAppointmentId();
+        newAppointment = appointmentId == 0l;
+        db = NCureDbHelper.getInstance(this).getWritableDatabase();
+
+        if (!newAppointment) {
+            loadAppointment();
+            calendar.setTime(appointment.getTime());
+        }
+    }
+
+    private long getExtraAppointmentId() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            return extras.getLong(EXTRA_APPOINTMENT_ID, 0l);
+        } else {
+            return 0l;
+        }
+    }
+
+    private void loadAppointment() {
+        appointment = Appointment.select(db, appointmentId);
+    }
+
+    private void setViewData() {
+        setDateTimeValues();
+        if (!newAppointment) {
+            etDescription.setText(appointment.getDescription());
+        }
     }
 
     private void setDateTimeValues() {
@@ -80,8 +120,11 @@ public class AppointmentsActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void onSaveClick() {
-        Appointment appointment = new Appointment();
-        appointment.setUserId(Utils.getUserId(this));
+        if (newAppointment) {
+            appointment = new Appointment();
+            appointment.setUserId(Utils.getUserId(this));
+        }
+
         appointment.setTime(calendar.getTime());
         appointment.setDescription(etDescription.getText().toString());
 
@@ -89,7 +132,7 @@ public class AppointmentsActivity extends AppCompatActivity implements View.OnCl
             return;
         }
 
-        appointment.insert(NCureDbHelper.getInstance(this).getWritableDatabase());
+        appointment.save(db);
         onBackPressed();
     }
 
