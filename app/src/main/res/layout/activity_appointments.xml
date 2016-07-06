@@ -20,90 +20,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorCardBackground"
-                android:padding="8dp">
+            <include layout="@layout/user_info" />
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/lbl_user"
-                        android:layout_marginRight="16dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/tv_user" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/lbl_last_used"
-                        android:layout_marginRight="16dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/tv_last_used" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <HorizontalScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp">
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/lbl_new_patient"
-                        android:id="@+id/btn_new_patient" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/lbl_patients"
-                        android:id="@+id/btn_patients" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/lbl_doctors"
-                        android:id="@+id/btn_doctors" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/lbl_language"
-                        android:id="@+id/btn_language" />
-                </LinearLayout>
-            </HorizontalScrollView>
+            <include layout="@layout/action_buttons" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
                 android:padding="8dp"
                 android:background="@color/colorCardBackground"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -113,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="8dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp">
                 <LinearLayout
                     android:layout_width="0dp"
@@ -170,7 +93,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:minHeight="120dp"
-                android:layout_margin="8dp"
                 android:padding="8dp"
                 android:background="@color/colorCardBackground"
                 android:hint="@string/hint_appointment_description"
@@ -180,7 +102,7 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/lbl_save"
                 android:id="@+id/btn_save"
                 android:layout_gravity="right" />
