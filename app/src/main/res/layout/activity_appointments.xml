@@ -32,70 +32,16 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/lbl_add_appointment" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp">
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingRight="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/lbl_date"
-                        android:textColor="@android:color/white"
-                        android:layout_marginBottom="8dp"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:id="@+id/tv_date"
-                        android:background="@color/colorCardBackground"
-                        android:padding="8dp"
-                        android:textAlignment="center"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingLeft="8dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/tlbl_ime"
-                        android:textColor="@android:color/white"
-                        android:layout_marginBottom="8dp"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:id="@+id/tv_time"
-                        android:background="@color/colorCardBackground"
-                        android:padding="8dp"
-                        android:textAlignment="center"/>
-
-                </LinearLayout>
-            </LinearLayout>
+            <include layout="@layout/date_time" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:minHeight="120dp"
+                android:layout_marginTop="8dp"
                 android:padding="8dp"
                 android:background="@color/colorCardBackground"
-                android:hint="@string/hint_appointment_description"
+                android:hint="@string/hint_description"
                 android:gravity="top"
                 android:id="@+id/et_description"/>
 

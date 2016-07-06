@@ -11,7 +11,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class MainActivity extends ActionButtonActivity implements AdapterView.OnItemClickListener {
     private ArrayAdapter<Appointment> appointmentAdapter;
 
     private ImageButton ibNewAppointment;
@@ -56,7 +56,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        startAppointmentActivity(true, 0l);
+        switch (v.getId()) {
+            case R.id.ib_new_appointment:
+                startAppointmentActivity(true, 0l);
+                break;
+            default:
+                super.onClick(v);
+        }
     }
 
     @Override

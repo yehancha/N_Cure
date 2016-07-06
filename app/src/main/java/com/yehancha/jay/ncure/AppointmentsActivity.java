@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class AppointmentsActivity extends AppCompatActivity implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class AppointmentsActivity extends ActionButtonActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     public static final String EXTRA_APPOINTMENT_ID = "EXTRA_APPOINTMENT_ID";
 
     private static final String EXTRA_YEAR = "EXTRA_YEAR";
@@ -141,6 +141,9 @@ public class AppointmentsActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.tv_time:
                 onTimeClick();
+                break;
+            default:
+                super.onClick(v);
         }
     }
 
