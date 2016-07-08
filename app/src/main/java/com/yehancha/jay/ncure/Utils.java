@@ -20,4 +20,8 @@ public class Utils {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(PREF_KEY_USER_ID, null);
     }
+
+    public static boolean isValidString(String s) {
+        return s != null && !s.isEmpty() && !s.trim().isEmpty();
+    }
 }

@@ -17,8 +17,11 @@
     <string name="hint_address">Address</string>
     <string name="hint_city">City</string>
     <string name="hint_disease">Disease</string>
-    <string name="hint_id">ID</string>
+    <string name="hint_id">ID (auto generated)</string>
     <string name="lbl_save">Save</string>
     <string name="msg_invalid_login_data">Your login data is invalid. Please log back in.</string>
-    <string name="msg_empty_description">Please write a description.</string>
+    <string name="msg_empty_description">Please fill the description.</string>
+    <string name="msg_empty_patient_name">Please fill patient name.</string>
+    <string name="msg_empty_city">Please fill the city.</string>
+    <string name="msg_empty_disease">Please fill the disease</string>
 </resources>

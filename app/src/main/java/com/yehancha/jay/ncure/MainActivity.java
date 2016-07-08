@@ -1,15 +1,12 @@
 package com.yehancha.jay.ncure;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
-
-import java.util.ArrayList;
 
 public class MainActivity extends ActionButtonActivity implements AdapterView.OnItemClickListener {
     private ArrayAdapter<Appointment> appointmentAdapter;
@@ -48,7 +45,7 @@ public class MainActivity extends ActionButtonActivity implements AdapterView.On
     }
 
     private void loadAppointments() {
-        ArrayList<Appointment> appointments = Appointment.selectAll(NCureDbHelper.getInstance(this).getReadableDatabase());
+        Appointment[] appointments = new Appointment().selectAll(NCureDbHelper.getInstance(this).getReadableDatabase());
         appointmentAdapter.clear();
         appointmentAdapter.addAll(appointments);
         appointmentAdapter.notifyDataSetChanged();

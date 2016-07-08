@@ -92,7 +92,9 @@
                 android:background="@color/colorCardBackground"
                 android:hint="@string/hint_id"
                 android:gravity="top"
-                android:id="@+id/et_id"/>
+                android:id="@+id/et_id"
+                android:inputType="none"
+                android:enabled="false"/>
 
             <Button
                 android:layout_width="wrap_content"

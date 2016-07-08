@@ -9,6 +9,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -91,6 +92,49 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
     }
 
     private void onSaveClick() {
+        String name = etName.getText().toString();
+        String address = etAddress.getText().toString();
+        String city = etCity.getText().toString();
+        String description = etDescription.getText().toString();
+        String disease = etDisease.getText().toString();
+        Date lastUpdated = new Date();
+
+        Patient patient = new Patient();
+        patient.setName(name);
+        patient.setAddress(address);
+        patient.setCity(city);
+        patient.setDescription(description);
+        patient.setDisease(disease);
+        patient.setLastUpdated(lastUpdated);
+
+        if (!validatePatient(patient)) {
+            return;
+        }
+
+        patient.save(NCureDbHelper.getInstance(this).getWritableDatabase());
+        onBackPressed();
+    }
+
+    private boolean validatePatient(Patient patient) {
+        if (!Utils.isValidString(patient.getName())) {
+            showToast(getString(R.string.msg_empty_patient_name));
+            etName.requestFocus();
+            return false;
+        } else if (!Utils.isValidString(patient.getCity())) {
+            showToast(getString(R.string.msg_empty_city));
+            etCity.requestFocus();
+            return false;
+        } else if (!Utils.isValidString(patient.getDisease())) {
+            showToast(getString(R.string.msg_empty_disease));
+            etDisease.requestFocus();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     private void onDateClick() {

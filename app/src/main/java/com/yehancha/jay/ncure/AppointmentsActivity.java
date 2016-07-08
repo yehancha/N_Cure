@@ -69,7 +69,7 @@ public class AppointmentsActivity extends ActionButtonActivity implements DatePi
     }
 
     private void loadAppointment() {
-        appointment = Appointment.select(db, appointmentId);
+        appointment = new Appointment().select(db, appointmentId);
     }
 
     private void setViewData() {
@@ -130,7 +130,7 @@ public class AppointmentsActivity extends ActionButtonActivity implements DatePi
         appointment.setTime(calendar.getTime());
         appointment.setDescription(etDescription.getText().toString());
 
-        if (!isValidAppointment(appointment)) {
+        if (!validateAppointment(appointment)) {
             return;
         }
 
@@ -138,21 +138,17 @@ public class AppointmentsActivity extends ActionButtonActivity implements DatePi
         onBackPressed();
     }
 
-    private boolean isValidAppointment(Appointment appointment) {
-        if (!isValidString(appointment.getUserId())) {
+    private boolean validateAppointment(Appointment appointment) {
+        if (!Utils.isValidString(appointment.getUserId())) {
             showToast(getString(R.string.msg_invalid_login_data));
             startLoginActivity();
             return false;
-        } else if (!isValidString(appointment.getDescription())) {
+        } else if (!Utils.isValidString(appointment.getDescription())) {
             showToast(getString(R.string.msg_empty_description));
             return false;
         }
 
         return true;
-    }
-
-    private boolean isValidString(String s) {
-        return s != null && !s.isEmpty() && !s.trim().isEmpty();
     }
 
     private void showToast(String message) {

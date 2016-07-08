@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class NCureDbHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "NCure.db";
     private static NCureDbHelper dbHelperInstance;
 
@@ -23,11 +23,13 @@ public class NCureDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(NCureContract.SQL_CREATE_APPOINTMENTS);
+        db.execSQL(NCureContract.SQL_CREATE_PATIENTS);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(NCureContract.SQL_DELETE_APPOINTMENTS);
+        db.execSQL(NCureContract.SQL_DELETE_PATIENTS);
         onCreate(db);
     }
 
