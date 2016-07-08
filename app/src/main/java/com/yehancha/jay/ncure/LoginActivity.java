@@ -58,28 +58,33 @@ public class LoginActivity extends AppCompatActivity {
             public void afterTextChanged(final Editable s) {
                 final String userId = s.toString();
                 if (userId.length() == LENGTH_USER_ID) {
-                    final ProgressDialog progressDialog = ProgressDialog.show(LoginActivity.this, "Login in", "Please wait while we log you in.");
-                    RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
-                    StringRequest request = new StringRequest(Request.Method.GET, Utils.SERVER_URL + "users.php/" + s.toString(), new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            progressDialog.dismiss();
-                            Utils.setUserId(LoginActivity.this, userId.toString());
-                            startMainActivity();
-                            updateAppointments(userId);
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            progressDialog.dismiss();
-                            if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
-                                showAlertDialog("Wrong user id", "You have entered a wrong user id. Please try again.");
-                            } else {
-                                showAlertDialog("Login failed", "Something went wrong when trying to log you in. Please try again.");
+                    if (userId.equals("0000")) {
+                        Utils.setUserId(LoginActivity.this, userId.toString());
+                        startMainActivity();
+                    } else {
+                        final ProgressDialog progressDialog = ProgressDialog.show(LoginActivity.this, "Login in", "Please wait while we log you in.");
+                        RequestQueue requestQueue = Volley.newRequestQueue(getBaseContext());
+                        StringRequest request = new StringRequest(Request.Method.GET, Utils.SERVER_URL + "users.php/" + s.toString(), new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                progressDialog.dismiss();
+                                Utils.setUserId(LoginActivity.this, userId.toString());
+                                startMainActivity();
+                                updateAppointments(userId);
                             }
-                        }
-                    });
-                    requestQueue.add(request);
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                progressDialog.dismiss();
+                                if (error.networkResponse != null && error.networkResponse.statusCode == 401) {
+                                    showAlertDialog("Wrong user id", "You have entered a wrong user id. Please try again.");
+                                } else {
+                                    showAlertDialog("Login failed", "Something went wrong when trying to log you in. Please try again.");
+                                }
+                            }
+                        });
+                        requestQueue.add(request);
+                    }
                 }
             }
         });
