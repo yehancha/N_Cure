@@ -3,9 +3,12 @@ package com.yehancha.jay.ncure;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Patient extends BaseModel<Patient> {
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
     private String name;
     private String address;
     private String city;
@@ -92,5 +95,10 @@ public class Patient extends BaseModel<Patient> {
     @Override
     public String getTableName() {
         return NCureContract.Patient.TABLE_NAME;
+    }
+
+    @Override
+    public String toString() {
+        return dateFormat.format(lastUpdated) + ": " + name;
     }
 }

@@ -8,6 +8,7 @@
     <string name="lbl_user">User:</string>
     <string name="lbl_last_used">Last used:</string>
     <string name="lbl_schedule">My Schedule</string>
+    <string name="lbl_patient_list">Last visited patients</string>
     <string name="lbl_add_appointment">Add New Appointment</string>
     <string name="lbl_add_patient">Add New Patient</string>
     <string name="lbl_date">Date</string>
@@ -24,4 +25,5 @@
     <string name="msg_empty_patient_name">Please fill patient name.</string>
     <string name="msg_empty_city">Please fill the city.</string>
     <string name="msg_empty_disease">Please fill the disease</string>
+    <string name="hint_search">Search</string>
 </resources>
