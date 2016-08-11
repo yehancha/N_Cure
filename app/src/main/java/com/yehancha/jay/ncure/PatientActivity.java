@@ -2,6 +2,7 @@ package com.yehancha.jay.ncure;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class PatientActivity extends ActionButtonActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+    public static final String EXTRA_PATIENT_ID = "EXTRA_PATIENT_ID";
+
+    private boolean newPatient;
+    private long patientId;
+    private Patient patient;
+    private SQLiteDatabase db;
 
     private TextView tvDate;
     private TextView tvTime;
@@ -32,9 +39,30 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient);
+        initFields();
         findViews();
-        showDateTimeValues();
+        setViewData();
         setListeners();
+    }
+
+    private void initFields() {
+        patientId = getExtraPatientId();
+        newPatient = patientId == 0l;
+        db = NCureDbHelper.getInstance(this).getWritableDatabase();
+
+        if (!newPatient) {
+            loadPatient();
+            calendar.setTime(patient.getLastUpdated());
+        }
+    }
+
+    private long getExtraPatientId() {
+        Bundle extras = getIntent().getExtras();
+        return extras != null ? extras.getLong(EXTRA_PATIENT_ID, 0l) : 0l;
+    }
+
+    private void loadPatient() {
+        patient = new Patient().select(db, patientId);
     }
 
     private void findViews() {
@@ -47,6 +75,18 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
         etDisease = (EditText) findViewById(R.id.et_disease);
         etId = (EditText) findViewById(R.id.et_id);
         btnSave = (Button) findViewById(R.id.btn_save);
+    }
+
+    private void setViewData() {
+        showDateTimeValues();
+        if (!newPatient) {
+            etName.setText(patient.getName());
+            etAddress.setText(patient.getAddress());
+            etCity.setText(patient.getCity());
+            etDescription.setText(patient.getDescription());
+            etDisease.setText(patient.getDisease());
+            etId.setText("" + patient.getId());
+        }
     }
 
     private void showDateTimeValues() {
@@ -92,6 +132,10 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
     }
 
     private void onSaveClick() {
+        if (newPatient) {
+            patient = new Patient();
+        }
+
         String name = etName.getText().toString();
         String address = etAddress.getText().toString();
         String city = etCity.getText().toString();
@@ -99,7 +143,6 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
         String disease = etDisease.getText().toString();
         Date lastUpdated = new Date();
 
-        Patient patient = new Patient();
         patient.setName(name);
         patient.setAddress(address);
         patient.setCity(city);
