@@ -99,6 +99,6 @@ public class Patient extends BaseModel<Patient> {
 
     @Override
     public String toString() {
-        return dateFormat.format(lastUpdated) + ": " + name;
+        return (lastUpdated != null ? dateFormat.format(lastUpdated) : "") + ": " + name;
     }
 }

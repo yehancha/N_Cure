@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Utils.setUserId(LoginActivity.this, userId.toString());
                                 startMainActivity();
                                 updateAppointments(userId);
+                                updatePatients();
                             }
                         }, new Response.ErrorListener() {
                             @Override
@@ -108,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateAppointments(String userId) {
         StringRequest request = new StringRequest(
-                Request.Method.GET, Utils.SERVER_URL + "/appointments.php/" + userId, new Response.Listener<String>() {
+                Request.Method.GET, Utils.SERVER_URL + "/appointments.php/user/" + userId, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 ArrayList<Appointment> appointments = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create().fromJson(response, new TypeToken<ArrayList<Appointment>>(){}.getType());
@@ -116,6 +117,27 @@ public class LoginActivity extends AppCompatActivity {
                 SQLiteDatabase db = NCureDbHelper.getInstance(LoginActivity.this).getWritableDatabase();
                 for (Appointment appointment : appointments) {
                     appointment.insert(db);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+        Volley.newRequestQueue(this).add(request);
+    }
+
+    private void updatePatients() {
+        StringRequest request = new StringRequest(
+                Request.Method.GET, Utils.SERVER_URL + "/patients.php/", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                ArrayList<Patient> patients = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create().fromJson(response, new TypeToken<ArrayList<Patient>>(){}.getType());
+
+                SQLiteDatabase db = NCureDbHelper.getInstance(LoginActivity.this).getWritableDatabase();
+                for (Patient patient : patients) {
+                    patient.insert(db);
                 }
             }
         }, new Response.ErrorListener() {

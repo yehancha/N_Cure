@@ -52,7 +52,10 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
 
         if (!newPatient) {
             loadPatient();
-            calendar.setTime(patient.getLastUpdated());
+            Date lastUpdated = patient.getLastUpdated();
+            if (lastUpdated != null) {
+                calendar.setTime(patient.getLastUpdated());
+            }
         }
     }
 

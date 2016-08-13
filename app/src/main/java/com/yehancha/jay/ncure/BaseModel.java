@@ -118,4 +118,8 @@ public abstract class BaseModel<T extends BaseModel> {
     private static String[] getSelectionArgsForRowId(long _id) {
         return new String[] { String.valueOf(_id) };
     }
+
+    public boolean delete(SQLiteDatabase db) {
+        return db.delete(getTableName(), "_id=?", new String[] { String.valueOf(_id) }) > 0;
+    }
 }

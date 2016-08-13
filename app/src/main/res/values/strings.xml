@@ -26,4 +26,7 @@
     <string name="msg_empty_city">Please fill the city.</string>
     <string name="msg_empty_disease">Please fill the disease</string>
     <string name="hint_search">Search</string>
+    <string name="title_activity_sync">Sync</string>
+    <string name="lbl_action_start_sync">Start sync</string>
+    <string name="lbl_action_sync">Sync</string>
 </resources>

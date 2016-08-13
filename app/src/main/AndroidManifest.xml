@@ -22,8 +22,11 @@
         <activity
             android:name=".PatientActivity"
             android:launchMode="singleTop" />
-        <activity android:name=".PatientsActiviy"
+        <activity
+            android:name=".PatientsActiviy"
             android:launchMode="singleTop" />
+        <activity android:name=".SyncActivity"
+            android:label="@string/title_activity_sync"></activity>
     </application>
 
 </manifest>
