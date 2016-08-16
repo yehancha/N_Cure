@@ -2,21 +2,36 @@ package com.yehancha.jay.ncure;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 
 public class PatientActivity extends ActionButtonActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     public static final String EXTRA_PATIENT_ID = "EXTRA_PATIENT_ID";
+
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final String TYPE_IMAGE_FOLDER = "image";
+    private static final String FILE_NAME_TEMP_FILE = "tempFile.jpg";
+
+    private static String FILE_PATH_TEMP_FILE;
 
     private boolean newPatient;
     private long patientId;
@@ -31,6 +46,7 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
     private EditText etDescription;
     private EditText etDisease;
     private EditText etId;
+    private ImageView iv;
     private Button btnSave;
 
     private Calendar calendar = Calendar.getInstance();
@@ -46,6 +62,8 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
     }
 
     private void initFields() {
+        FILE_PATH_TEMP_FILE = getExternalFilesDir(TYPE_IMAGE_FOLDER) + File.separator + FILE_NAME_TEMP_FILE;
+
         patientId = getExtraPatientId();
         newPatient = patientId == 0l;
         db = NCureDbHelper.getInstance(this).getWritableDatabase();
@@ -77,6 +95,7 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
         etDescription = (EditText) findViewById(R.id.et_description);
         etDisease = (EditText) findViewById(R.id.et_disease);
         etId = (EditText) findViewById(R.id.et_id);
+        iv = (ImageView) findViewById(R.id.iv);
         btnSave = (Button) findViewById(R.id.btn_save);
     }
 
@@ -102,6 +121,7 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
         btnSave.setOnClickListener(this);
         tvDate.setOnClickListener(this);
         tvTime.setOnClickListener(this);
+        iv.setOnClickListener(this);
     }
 
     @Override
@@ -123,12 +143,19 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
             case R.id.btn_save:
                 onSaveClick();
                 break;
+
             case R.id.tv_date:
                 onDateClick();
                 break;
+
             case R.id.tv_time:
                 onTimeClick();
                 break;
+
+            case R.id.iv:
+                onImageViewClick();
+                break;
+
             default:
                 super.onClick(v);
         }
@@ -189,6 +216,37 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
 
     private void onTimeClick() {
         DateTimeManager.showTimePicker(calendar, getSupportFragmentManager());
+    }
+
+    private void onImageViewClick() {
+        dispatchTakePictureIntent();
+    }
+
+    private void dispatchTakePictureIntent() {
+        PackageManager pm = getPackageManager();
+
+        if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            Snackbar.make(iv, "No camera functionality found!", Snackbar.LENGTH_LONG).show();
+        }
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(pm) != null) {
+            startPhotoActivity(takePictureIntent);
+        }
+    }
+
+    private void startPhotoActivity(Intent takePictureIntent) {
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.parse(new File(FILE_PATH_TEMP_FILE).toURI().toString()));
+        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            File file = new File(FILE_PATH_TEMP_FILE);
+            Bitmap imageBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            iv.setImageBitmap(imageBitmap);
+        }
     }
 
     @Override
