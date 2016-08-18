@@ -96,18 +96,43 @@
                 android:inputType="none"
                 android:enabled="false"/>
 
-            <ImageView
-                android:id="@+id/iv"
-                android:layout_width="200dp"
-                android:layout_height="200dp" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
                 android:layout_marginTop="8dp"
-                android:text="@string/lbl_save"
-                android:id="@+id/btn_save"
-                android:layout_gravity="right" />
+                android:layout_marginBottom="8dp">
+
+                <LinearLayout
+                    android:id="@+id/ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:orientation="horizontal"/>
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/lbl_photo"
+                    android:id="@+id/btn_photo"
+                    android:layout_gravity="right" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/lbl_save"
+                    android:id="@+id/btn_save"
+                    android:layout_gravity="right" />
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

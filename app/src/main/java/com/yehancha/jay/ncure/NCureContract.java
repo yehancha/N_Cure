@@ -25,7 +25,8 @@ public class NCureContract {
                     Patient.COLUMN_NAME_CITY + TYPE_TEXT + COMA_SEP +
                     Patient.COLUMN_NAME_DESCRIPTION + TYPE_TEXT + COMA_SEP +
                     Patient.COLUMN_NAME_DISEASE + TYPE_TEXT + COMA_SEP +
-                    Patient.COLUMN_NAME_LAST_UPDATED + TYPE_INTEGER +
+                    Patient.COLUMN_NAME_LAST_UPDATED + TYPE_INTEGER + COMA_SEP +
+                    Patient.COLUMN_NAME_IMAGE_FILES + TYPE_TEXT +
                     ")";
 
     public static final String SQL_DELETE_APPOINTMENTS = "DROP TABLE IF EXISTS " + Appointment.TABLE_NAME;
@@ -48,6 +49,7 @@ public class NCureContract {
         public static final String COLUMN_NAME_DESCRIPTION = "description";
         public static final String COLUMN_NAME_DISEASE = "disease";
         public static final String COLUMN_NAME_LAST_UPDATED = "last_updated";
+        public static final String COLUMN_NAME_IMAGE_FILES = "image_files";
     }
 
     public interface NCureBaseColumns extends BaseColumns {

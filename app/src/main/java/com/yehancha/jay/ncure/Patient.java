@@ -15,6 +15,7 @@ public class Patient extends BaseModel<Patient> {
     private String description;
     private String disease;
     private Date lastUpdated;
+    private String imageFiles;
 
     public String getName() {
         return name;
@@ -64,6 +65,14 @@ public class Patient extends BaseModel<Patient> {
         this.lastUpdated = lastUpdated;
     }
 
+    public String getImageFiles() {
+        return imageFiles;
+    }
+
+    public void setImageFiles(String imageFiles) {
+        this.imageFiles = imageFiles;
+    }
+
     @Override
     public void onCursor(Cursor cursor, Patient patient) {
         patient.name = cursor.getString(cursor.getColumnIndex(NCureContract.Patient.COLUMN_NAME_NAME));
@@ -71,6 +80,7 @@ public class Patient extends BaseModel<Patient> {
         patient.city = cursor.getString(cursor.getColumnIndex(NCureContract.Patient.COLUMN_NAME_CITY));
         patient.description = cursor.getString(cursor.getColumnIndex(NCureContract.Patient.COLUMN_NAME_DESCRIPTION));
         patient.disease = cursor.getString(cursor.getColumnIndex(NCureContract.Patient.COLUMN_NAME_DISEASE));
+        patient.imageFiles = cursor.getString(cursor.getColumnIndex(NCureContract.Patient.COLUMN_NAME_IMAGE_FILES));
 
         long lastUpdated = cursor.getLong(cursor.getColumnIndex(NCureContract.Patient.COLUMN_NAME_LAST_UPDATED));
         if (lastUpdated != 0) {
@@ -86,6 +96,7 @@ public class Patient extends BaseModel<Patient> {
         values.put(NCureContract.Patient.COLUMN_NAME_CITY, city);
         values.put(NCureContract.Patient.COLUMN_NAME_DESCRIPTION, description);
         values.put(NCureContract.Patient.COLUMN_NAME_DISEASE, disease);
+        values.put(NCureContract.Patient.COLUMN_NAME_IMAGE_FILES, imageFiles);
 
         if (lastUpdated != null) {
             values.put(NCureContract.Patient.COLUMN_NAME_LAST_UPDATED, lastUpdated.getTime());

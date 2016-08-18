@@ -20,6 +20,7 @@
     <string name="hint_disease">Disease</string>
     <string name="hint_id">ID (auto generated)</string>
     <string name="lbl_save">Save</string>
+    <string name="lbl_photo">Photo</string>
     <string name="msg_invalid_login_data">Your login data is invalid. Please log back in.</string>
     <string name="msg_empty_description">Please fill the description.</string>
     <string name="msg_empty_patient_name">Please fill patient name.</string>
@@ -29,4 +30,5 @@
     <string name="title_activity_sync">Sync</string>
     <string name="lbl_action_start_sync">Start sync</string>
     <string name="lbl_action_sync">Sync</string>
+    <string name="msg_no_camera">No camera functionality found!</string>
 </resources>

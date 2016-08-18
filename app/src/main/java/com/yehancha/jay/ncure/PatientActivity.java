@@ -15,12 +15,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -31,10 +34,12 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
     private static final String TYPE_IMAGE_FOLDER = "image";
     private static final String FILE_NAME_TEMP_FILE = "tempFile.jpg";
 
-    private static String FILE_PATH_TEMP_FILE;
+    private static String PATH_EXTERNAL_DIR;
+    private static String PATH_TEMP_FILE;
 
     private boolean newPatient;
     private long patientId;
+    private ArrayList<String> imageFileNames = new ArrayList<>();
     private Patient patient;
     private SQLiteDatabase db;
 
@@ -46,7 +51,8 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
     private EditText etDescription;
     private EditText etDisease;
     private EditText etId;
-    private ImageView iv;
+    private LinearLayout ll;
+    private Button btnPhoto;
     private Button btnSave;
 
     private Calendar calendar = Calendar.getInstance();
@@ -62,7 +68,8 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
     }
 
     private void initFields() {
-        FILE_PATH_TEMP_FILE = getExternalFilesDir(TYPE_IMAGE_FOLDER) + File.separator + FILE_NAME_TEMP_FILE;
+        PATH_EXTERNAL_DIR = getExternalFilesDir(TYPE_IMAGE_FOLDER).toString();
+        PATH_TEMP_FILE = PATH_EXTERNAL_DIR + File.separator + FILE_NAME_TEMP_FILE;
 
         patientId = getExtraPatientId();
         newPatient = patientId == 0l;
@@ -95,7 +102,8 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
         etDescription = (EditText) findViewById(R.id.et_description);
         etDisease = (EditText) findViewById(R.id.et_disease);
         etId = (EditText) findViewById(R.id.et_id);
-        iv = (ImageView) findViewById(R.id.iv);
+        ll = (LinearLayout) findViewById(R.id.ll);
+        btnPhoto = (Button) findViewById(R.id.btn_photo);
         btnSave = (Button) findViewById(R.id.btn_save);
     }
 
@@ -108,6 +116,22 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
             etDescription.setText(patient.getDescription());
             etDisease.setText(patient.getDisease());
             etId.setText("" + patient.getId());
+
+            loadImages(patient);
+        }
+    }
+
+    private void loadImages(Patient patient) {
+        String names = patient.getImageFiles();
+        if (names == null || names.length() == 0) {
+            return;
+        }
+
+        String[] nameArray = names.split(",");
+
+        for (String name : nameArray) {
+            imageFileNames.add(name);
+            loadImage(PATH_EXTERNAL_DIR + File.separator + name);
         }
     }
 
@@ -121,7 +145,7 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
         btnSave.setOnClickListener(this);
         tvDate.setOnClickListener(this);
         tvTime.setOnClickListener(this);
-        iv.setOnClickListener(this);
+        btnPhoto.setOnClickListener(this);
     }
 
     @Override
@@ -152,8 +176,8 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
                 onTimeClick();
                 break;
 
-            case R.id.iv:
-                onImageViewClick();
+            case R.id.btn_photo:
+                onPhotoClick();
                 break;
 
             default:
@@ -162,6 +186,11 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
     }
 
     private void onSaveClick() {
+        savePatient();
+        onBackPressed();
+    }
+
+    private void savePatient() {
         if (newPatient) {
             patient = new Patient();
         }
@@ -179,13 +208,27 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
         patient.setDescription(description);
         patient.setDisease(disease);
         patient.setLastUpdated(lastUpdated);
+        patient.setImageFiles(getImageFileNames());
 
         if (!validatePatient(patient)) {
             return;
         }
 
         patient.save(NCureDbHelper.getInstance(this).getWritableDatabase());
-        onBackPressed();
+    }
+
+    private String getImageFileNames() {
+        String names = "";
+        for (String imageFileName : imageFileNames) {
+            names += imageFileName + ",";
+        }
+
+        int length = names.length();
+        if (length > 0) {
+            names = names.substring(0, length - 1);
+        }
+
+        return names;
     }
 
     private boolean validatePatient(Patient patient) {
@@ -218,7 +261,7 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
         DateTimeManager.showTimePicker(calendar, getSupportFragmentManager());
     }
 
-    private void onImageViewClick() {
+    private void onPhotoClick() {
         dispatchTakePictureIntent();
     }
 
@@ -226,7 +269,7 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
         PackageManager pm = getPackageManager();
 
         if (!pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            Snackbar.make(iv, "No camera functionality found!", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(ll, R.string.msg_no_camera, Snackbar.LENGTH_LONG).show();
         }
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -236,17 +279,35 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
     }
 
     private void startPhotoActivity(Intent takePictureIntent) {
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.parse(new File(FILE_PATH_TEMP_FILE).toURI().toString()));
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.parse(new File(PATH_TEMP_FILE).toURI().toString()));
         startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            File file = new File(FILE_PATH_TEMP_FILE);
-            Bitmap imageBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            iv.setImageBitmap(imageBitmap);
+        if (newPatient) {
+            savePatient();
         }
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            String fileName = Utils.getUserId(this) + "-" + new Date().getTime() + ".jpg";
+            File tempFile = new File(PATH_TEMP_FILE);
+            File file = new File(PATH_EXTERNAL_DIR + File.separator + fileName);
+            tempFile.renameTo(file);
+
+            loadImage(file.getAbsolutePath());
+
+            imageFileNames.add(fileName);
+        }
+    }
+
+    private void loadImage(String filePath) {
+        Bitmap imageBitmap = BitmapFactory.decodeFile(filePath);
+        FrameLayout fl = (FrameLayout) getLayoutInflater().inflate(R.layout.image_view, null);
+        ImageView iv = (ImageView) fl.findViewById(R.id.iv);
+        iv.setImageBitmap(imageBitmap);
+
+        ll.addView(fl);
     }
 
     @Override
