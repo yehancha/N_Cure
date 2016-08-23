@@ -9,10 +9,13 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -25,12 +28,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SyncActivity extends AppCompatActivity implements RequestQueue.RequestFinishedListener<Object> {
+public class SyncActivity extends AppCompatActivity implements RequestQueue.RequestFinishedListener<Object>,FileUploader.OnFileUploadResultListener {
     private TextView tvStatusApointments;
     private TextView tvStatusPatients;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -49,6 +53,8 @@ public class SyncActivity extends AppCompatActivity implements RequestQueue.Requ
 
         db = NCureDbHelper.getInstance(this).getReadableDatabase();
         rq = Volley.newRequestQueue(this);
+
+//        uploadFile(new File(getExternalFilesDir("image")));
     }
 
     @Override
@@ -152,7 +158,7 @@ public class SyncActivity extends AppCompatActivity implements RequestQueue.Requ
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                setText(tvStatusApointments, "Failed. Try again later.");
             }
         });
         rq.add(request);
@@ -197,7 +203,7 @@ public class SyncActivity extends AppCompatActivity implements RequestQueue.Requ
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                setText(tvStatusPatients, "Failed. Try again later.");
             }
         });
         rq.add(request);
@@ -226,5 +232,19 @@ public class SyncActivity extends AppCompatActivity implements RequestQueue.Requ
                 tv.setText(text);
             }
         });
+    }
+
+    private void uploadFile(byte[] fileData) {
+        try {
+            FileUploader fileUploader = new FileUploader(this, fileData, Utils.SERVER_URL + "/files.php", "images", this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onFileUploadResult(String result, String error) {
+        Log.d(getClass().getName(), result);
+        Log.e(getClass().getName(), error);
     }
 }

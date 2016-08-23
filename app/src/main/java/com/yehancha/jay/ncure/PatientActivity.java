@@ -77,9 +77,9 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
 
         if (!newPatient) {
             loadPatient();
-            Date lastUpdated = patient.getLastUpdated();
+            Date lastUpdated = patient.getLast_updated();
             if (lastUpdated != null) {
-                calendar.setTime(patient.getLastUpdated());
+                calendar.setTime(patient.getLast_updated());
             }
         }
     }
@@ -193,6 +193,7 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
     private void savePatient() {
         if (newPatient) {
             patient = new Patient();
+            newPatient = false;
         }
 
         String name = etName.getText().toString();
@@ -207,7 +208,7 @@ public class PatientActivity extends ActionButtonActivity implements DatePickerD
         patient.setCity(city);
         patient.setDescription(description);
         patient.setDisease(disease);
-        patient.setLastUpdated(lastUpdated);
+        patient.setLast_updated(lastUpdated);
         patient.setImageFiles(getImageFileNames());
 
         if (!validatePatient(patient)) {
