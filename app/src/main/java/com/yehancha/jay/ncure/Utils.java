@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 public class Utils {
-    public static final String SERVER_URL = "http://192.168.43.223/n-cure/";
+    public static final String SERVER_URL = "http://212.47.230.4/n-cure/";
 
     private static final String PREF_KEY_USER_ID = "user_id";
 

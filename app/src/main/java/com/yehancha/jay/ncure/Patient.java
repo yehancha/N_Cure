@@ -14,7 +14,8 @@ public class Patient extends BaseModel<Patient> {
     private String city;
     private String description;
     private String disease;
-    private Date lastUpdated;
+    private Date last_updated;
+    private String imageFiles;
 
     public String getName() {
         return name;
@@ -56,12 +57,20 @@ public class Patient extends BaseModel<Patient> {
         this.disease = disease;
     }
 
-    public Date getLastUpdated() {
-        return lastUpdated;
+    public Date getLast_updated() {
+        return last_updated;
     }
 
-    public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
+    public void setLast_updated(Date last_updated) {
+        this.last_updated = last_updated;
+    }
+
+    public String getImageFiles() {
+        return imageFiles;
+    }
+
+    public void setImageFiles(String imageFiles) {
+        this.imageFiles = imageFiles;
     }
 
     @Override
@@ -71,10 +80,11 @@ public class Patient extends BaseModel<Patient> {
         patient.city = cursor.getString(cursor.getColumnIndex(NCureContract.Patient.COLUMN_NAME_CITY));
         patient.description = cursor.getString(cursor.getColumnIndex(NCureContract.Patient.COLUMN_NAME_DESCRIPTION));
         patient.disease = cursor.getString(cursor.getColumnIndex(NCureContract.Patient.COLUMN_NAME_DISEASE));
+        patient.imageFiles = cursor.getString(cursor.getColumnIndex(NCureContract.Patient.COLUMN_NAME_IMAGE_FILES));
 
         long lastUpdated = cursor.getLong(cursor.getColumnIndex(NCureContract.Patient.COLUMN_NAME_LAST_UPDATED));
         if (lastUpdated != 0) {
-            patient.lastUpdated = new Date(lastUpdated);
+            patient.last_updated = new Date(lastUpdated);
         }
 
     }
@@ -86,9 +96,10 @@ public class Patient extends BaseModel<Patient> {
         values.put(NCureContract.Patient.COLUMN_NAME_CITY, city);
         values.put(NCureContract.Patient.COLUMN_NAME_DESCRIPTION, description);
         values.put(NCureContract.Patient.COLUMN_NAME_DISEASE, disease);
+        values.put(NCureContract.Patient.COLUMN_NAME_IMAGE_FILES, imageFiles);
 
-        if (lastUpdated != null) {
-            values.put(NCureContract.Patient.COLUMN_NAME_LAST_UPDATED, lastUpdated.getTime());
+        if (last_updated != null) {
+            values.put(NCureContract.Patient.COLUMN_NAME_LAST_UPDATED, last_updated.getTime());
         }
     }
 
@@ -99,6 +110,6 @@ public class Patient extends BaseModel<Patient> {
 
     @Override
     public String toString() {
-        return (lastUpdated != null ? dateFormat.format(lastUpdated) : "") + ": " + name;
+        return (last_updated != null ? dateFormat.format(last_updated) : "") + ": " + name;
     }
 }
